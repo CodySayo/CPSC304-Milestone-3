@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!--Test Oracle file for UBC CPSC304 2018 Winter Term 1
   Created by Jiemin Zhang
   Modified by Simona Radu

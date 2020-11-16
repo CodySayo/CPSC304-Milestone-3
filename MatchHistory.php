@@ -37,11 +37,11 @@
 
         <hr />
 
-        <h2>Insert Values into DemoTable</h2>
+        <h2>Add a new match</h2>
         <form method="POST" action="MatchHistory.php"> <!--refresh page when submitted-->
             <input type="hidden" id="insertQueryRequest" name="insertQueryRequest">
-            Number: <input type="text" name="insNo"> <br /><br />
-            Name: <input type="text" name="insName"> <br /><br />
+            Match ID: <input type="text" name="matchID"> <br /><br />
+            Date: <input type="text" name="matchDate"> <br /><br />
 
             <input type="submit" value="Insert" name="insertSubmit"></p>
         </form>
@@ -165,7 +165,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example, 
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_vzhu23", "a25864851", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_obys", "a68031525", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");
@@ -231,15 +231,15 @@
 
             //Getting the values from user and insert data into the table
             $tuple = array (
-                ":bind1" => $_POST['insNo'],
-                ":bind2" => $_POST['insName']
+                ":bind1" => $_POST['matchID'],
+                ":bind2" => $_POST['matchDate']
             );
 
             $alltuples = array (
                 $tuple
             );
 
-            executePlainSQL("insert into match values(1234, '1234')");
+            executeBoundSQL("insert into match values(:bind1, :bind2)", $alltuples);
             OCICommit($db_conn);
         }
 
