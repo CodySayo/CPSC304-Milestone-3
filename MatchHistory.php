@@ -39,11 +39,21 @@
 
         <h2>Add a new match</h2>
         <form method="POST" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="insertQueryRequest" name="insertQueryRequest">
-            Match ID: <input type="text" name="matchID"> <br /><br />
-            Date: <input type="text" name="matchDate"> <br /><br />
+            <input type="hidden" id="insertMatchRequest" name="insertMatchRequest">
+            Match ID: <input type="text" name="insertMatchID"> <br /><br />
+            Date: <input type="text" name="insertMatchDate"> <br /><br />
 
             <input type="submit" value="Insert" name="insertSubmit"></p>
+        </form>
+
+        <hr />    
+
+        <h2>Delete a match</h2>
+        <form method="POST" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="deleteMatchRequest" name="deleteMatchRequest">
+            Match ID: <input type="text" name="deleteMatchID"> <br /><br />
+
+            <input type="submit" value="Delete" name="deleteSubmit"></p>
         </form>
 
         <hr />
@@ -57,14 +67,6 @@
             New Name: <input type="text" name="newName"> <br /><br />
 
             <input type="submit" value="Update" name="updateSubmit"></p>
-        </form>
-
-        <hr />
-
-        <h2>Count the Tuples in DemoTable</h2>
-        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="countTupleRequest" name="countTupleRequest">
-            <input type="submit" name="countTuples"></p>
         </form>
 
         <h2>Display the Tuples in Matches</h2>
@@ -196,17 +198,6 @@
             OCICommit($db_conn);
         }
 
-        // function handleResetRequest() {
-        //     global $db_conn;
-        //     // Drop old table
-        //     executePlainSQL("DROP TABLE demoTable");
-
-        //     // Create new table
-        //     echo "<br> creating new table <br>";
-            // executePlainSQL("CREATE TABLE demoTable (id int PRIMARY KEY, name char(30))");
-        //     OCICommit($db_conn);
-        // }
-
         function handleResetRequest() {
             global $db_conn;
             // Drop old table
@@ -231,8 +222,8 @@
 
             //Getting the values from user and insert data into the table
             $tuple = array (
-                ":bind1" => $_POST['matchID'],
-                ":bind2" => $_POST['matchDate']
+                ":bind1" => $_POST['insertMatchID'],
+                ":bind2" => $_POST['insertMatchDate']
             );
 
             $alltuples = array (
@@ -270,6 +261,27 @@
 
         }
 
+
+        //New handlers
+
+
+        function handleDeleteRequest() {
+            global $db_conn;
+
+            $delete_ID = $_POST['deleteMatchID'];
+
+            // you need the wrap the old name and new name values with single quotations
+            executePlainSQL("DELETE FROM match WHERE matchid = '" . $delete_ID . "'");
+            OCICommit($db_conn);
+        }
+
+
+
+
+
+
+
+
         // HANDLE ALL POST ROUTES
 	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
         function handlePOSTRequest() {
@@ -278,8 +290,10 @@
                     handleResetRequest();
                 } else if (array_key_exists('updateQueryRequest', $_POST)) {
                     handleUpdateRequest();
-                } else if (array_key_exists('insertQueryRequest', $_POST)) {
+                } else if (array_key_exists('insertMatchRequest', $_POST)) {
                     handleInsertRequest();
+                } else if (array_key_exists('deleteMatchRequest', $_POST)) {
+                    handleDeleteRequest();
                 }
                 disconnectFromDB();
             }
@@ -299,7 +313,7 @@
             }
         }
 
-		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit'])) {
+		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) ) {
             handleGETRequest();
