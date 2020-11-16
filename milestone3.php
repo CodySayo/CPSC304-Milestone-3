@@ -71,6 +71,8 @@
             <input type="submit" name="showTuples"></p>
         </form>
 
+        <h2>TEST TEST TEST</h2>>
+
         <?php
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
