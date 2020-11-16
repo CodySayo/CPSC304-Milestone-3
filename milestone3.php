@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!--Test Oracle file for UBC CPSC304 2018 Winter Term 1
   Created by Jiemin Zhang
   Modified by Simona Radu
@@ -71,8 +72,7 @@
             <input type="submit" name="showTuples"></p>
         </form>
 
-        <h2>TEST TEST TEST</h2>>
-
+        <h2>TEST TEST TEST 123 123 123</h2>
         <?php
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
