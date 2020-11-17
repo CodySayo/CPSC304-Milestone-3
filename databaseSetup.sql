@@ -124,7 +124,7 @@ CREATE TABLE BuysItem(
         UserID Integer,
     Team Char(5),
     MatchID Integer,
-    PRIMARY KEY (ItemName, UserID, Team),
+    PRIMARY KEY (ItemName, UserID, Team, MatchID),
     FOREIGN KEY (ItemName) REFERENCES Items(ItemName),
     FOREIGN KEY (UserID, Team, MatchID) REFERENCES "User"(UserID, Team, MatchID)
 );
