@@ -119,10 +119,10 @@
         <hr /> 
 
         <!-- AGGREGATION WITH HAVING -->
-        <h2></h2>
+        <h2>Find all Users who have played more than 3 matches and give their average kills and deaths</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+            <input type="hidden" id="aggrHavingRequest" name="aggrHavingRequest">
+            <input type="submit" name="aggrHaving"></p>
         </form>
 
         <hr /> 
@@ -137,10 +137,10 @@
         <hr /> 
 
         <!-- DIVISION -->
-        <h2></h2>
+        <h2>Find the users that have lost all their matches</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+            <input type="hidden" id="divisionRequest" name="divisionRequest">
+            <input type="submit" name="divisionSubmit"></p>
         </form>
 
         <hr /> 
@@ -385,10 +385,23 @@
                 echo "</tr>";
             }
             echo "</table>";
-
         }
 
-        function handleAggrHavingRequest(){}
+        function handleAggrHavingRequest(){
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT U.UserID, AVG(Kills), AVG(Deaths) FROM \"User\" U GROUP BY U.UserID HAVING count(*) > 3");
+            echo "<table>";
+            echo "<tr> <th>User ID</th> <th>Average Kills</th> <tr>Average Deaths</tr> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
 
         function handleNestedAggrGroupByRequest(){
             global $db_conn;
@@ -406,7 +419,21 @@
             echo "</table>";
         }
 
-        function handleDivisionRequest(){}
+        function handleDivisionRequest(){
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT * FROM \"User\" U WHERE NOT EXISTS ( ( SELECT * FROM \"User\" U2 WHERE U2.UserID = U.UserID ) MINUS ( SELECT * FROM \"User\" U3 WHERE U3.UserID = U.UserID AND U3.Victory = 'False' ) ) ");
+            echo "<table>";
+            echo "<tr> <th>User ID Name</th> <th>Team</th> <th>Match ID</th> <th>Victory</th> <th>Kills</th> <th>Deaths</th> <th>Assists</th> <th>Champion Name</th> <th>Role</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
 
 
 
@@ -437,11 +464,14 @@
                     handleShowTablesRequest();
                 } else if (array_key_exists('aggrGroupBy', $_GET)) {
                     handleAggrGroupByRequest();
-                } 
-                else if (array_key_exists('joinQueryRequest', $_GET)) {
+                } else if (array_key_exists('joinQueryRequest', $_GET)) {
                     handleJoinRequest();
                 } else if (array_key_exists("nestedAgg", $_GET)) {
                     handleNestedAggrGroupByRequest();
+                } else if (array_key_exists("aggrHaving", $_GET)) {
+                    handleAggrHavingRequest();
+                } else if (array_key_exists("divisionRequest", $_GET)) {
+                    handleDivisionRequest();
                 }
                 disconnectFromDB();
             }
@@ -450,7 +480,7 @@
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) 
-        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest'])) {
+        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest']) || isset($_GET['aggrHaving']) || isset($_GET['divisionSubmit'])) {
             handleGETRequest();
         }
 		?>
