@@ -467,7 +467,7 @@
 
             $result = executePlainSQL("SELECT U.UserID, AVG(Kills), AVG(Deaths) FROM \"User\" U GROUP BY U.UserID HAVING count(*) > 3");
             echo "<table>";
-            echo "<tr> <th>User ID</th> <th>Average Kills</th> <tr>Average Deaths</tr> </tr>";
+            echo "<tr> <th>User ID</th> <th>Average Kills</th> <th>Average Deaths</th> </tr>";
             while (($row = oci_fetch_row($result)) != false) {
                 echo "<tr>";
                 foreach ($row as $item) {
