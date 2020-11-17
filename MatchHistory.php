@@ -24,6 +24,8 @@
     table, th, td {
         border: 1px solid black;
         border-collapse: collapse;
+        text-align: center; 
+        vertical-align: middle;
     }
     </style>
     <body>
