@@ -82,17 +82,19 @@
         <!-- SELECTION -->
         <h2>Show the users from a match</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+            <input type="hidden" id="selectionRequest" name="selectionRequest">
+            Match ID: <input type="text" name="selectionMatchIDInput"> <br /><br />
+            <input type="submit" value="Select" name="selectionSubmit"></p>
         </form>
 
 
         <!-- PROJECTION -->
-        <h2></h2>
-        <form method="POST" action="MatchHistory.php"> <!--refresh page when submitted-->
+        <h2>Get the K/D/A of a player in a match</h2>
+        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
             <input type="hidden" id="projectRequest" name="projectRequest">
-            <input type="submit" name="projectSubmit"></p>
-            User ID: <input type="text" name="projectInput"> <br /><br />
+            User ID: <input type="text" name="projectUserIDInput"> <br /><br />
+            Match ID: <input type="text" name="projectMatchIDInput"> <br /><br />
+            <input type="submit" value="Project" name="projectSubmit"></p>
         </form>
 
         <!-- JOIN -->
@@ -337,9 +339,44 @@
             OCICommit($db_conn);
         }
 
-        function handleSelectionRequest(){}
+        function handleSelectionRequest(){
+            global $db_conn;
 
-        function handleProjectionRequest(){}
+            //Getting the values from user and insert data into the table
+            $matchID = $_GET['selectionMatchIDInput'];
+
+            $result = executePlainSQL("SELECT u.UserID, u.Team, u.Victory, u.Kills, u.Deaths, u.Assists, u.ChampionName, u.Role FROM \"User\" u, Match m WHERE u.MatchID = $matchID AND m.MatchID = $matchID");
+            echo "<table>";
+            echo "<tr> <th>UserID</th> <th>Team</th> <th>Victory</th> <th>Kills</th> <th>Deaths</th> <th>Assists</th> <th>Champion</th> <th>Role</th>  </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
+
+        function handleProjectionRequest(){
+            global $db_conn;
+
+            //Getting the values from user and insert data into the table
+            $userID = $_GET['projectUserIDInput'];
+            $matchID = $_GET['projectMatchIDInput'];
+
+            $result = executePlainSQL("SELECT u.Kills, u.Deaths, u.Assists FROM \"User\" u, Match m WHERE u.UserID = $userID AND m.MatchID = $matchID");
+            echo "<table>";
+            echo "<tr> <th>Kills</th> <th>Deaths</th> <th>Assists</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
 
         function handleJoinRequest(){
             global $db_conn;
@@ -402,13 +439,19 @@
                 else if (array_key_exists('joinQueryRequest', $_GET)) {
                     handleJoinRequest();
                 }
+                else if (array_key_exists('projectRequest', $_GET)) {
+                    handleProjectionRequest();
+                }
+                else if (array_key_exists('selectionRequest', $_GET)) {
+                    handleSelectionRequest();
+                }
                 disconnectFromDB();
             }
         }
 
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
-        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) || isset($_GET['joinSubmit'])) {
+        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) || isset($_GET['joinSubmit']) || isset($_GET['projectSubmit']) || isset($_GET['selectionSubmit'])) {
             handleGETRequest();
         }
 		?>
