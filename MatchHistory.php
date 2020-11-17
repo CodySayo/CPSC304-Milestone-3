@@ -75,6 +75,66 @@
             <input type="submit" name="showTables"></p>
         </form>
 
+
+        <!-- NEW STUFF: CHANGE FIELDS AS NEEDED -->
+
+
+        <!-- SELECTION -->
+        <h2>Show the users from a match</h2>
+        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
+            <input type="submit" name="showTables"></p>
+        </form>
+
+
+        <!-- PROJECTION -->
+        <h2></h2>
+        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
+            <input type="submit" name="showTables"></p>
+        </form>
+
+
+        <!-- JOIN -->
+        <h2></h2>
+        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
+            <input type="submit" name="showTables"></p>
+        </form>
+
+
+        <!-- AGGREGATION WITH GROUP BY -->
+        <h2></h2>
+        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
+            <input type="submit" name="showTables"></p>
+        </form>
+
+
+        <!-- AGGREGATION WITH HAVING -->
+        <h2></h2>
+        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
+            <input type="submit" name="showTables"></p>
+        </form>
+
+
+        <!-- NESTED AGGREGATION GROUP BY -->
+        <h2></h2>
+        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
+            <input type="submit" name="showTables"></p>
+        </form>
+
+
+        <!-- DIVISION -->
+        <h2></h2>
+        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
+            <input type="submit" name="showTables"></p>
+        </form>
+
+
         <?php
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
@@ -262,7 +322,7 @@
         }
 
 
-        //New handlers
+        //NEW HANDLERS
 
 
         function handleDeleteRequest() {
@@ -275,10 +335,19 @@
             OCICommit($db_conn);
         }
 
+        function handleSelectionRequest(){}
 
+        function handleProjectionRequest(){}
 
+        function handleJoinRequest(){}
 
+        function handleAggrGroupByRequest(){}
 
+        function handleAggrHavingRequest(){}
+
+        function handleNestedAggrGroupByRequest(){}
+
+        function handleDivisionRequest(){}
 
 
 
