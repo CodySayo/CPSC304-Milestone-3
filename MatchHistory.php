@@ -58,13 +58,13 @@
 
         <hr />
 
-        <h2>Update Name in DemoTable</h2>
+        <h2>Update Item Price</h2>
         <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
 
         <form method="POST" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="updateQueryRequest" name="updateQueryRequest">
-            Old Name: <input type="text" name="oldName"> <br /><br />
-            New Name: <input type="text" name="newName"> <br /><br />
+            <input type="hidden" id="updateItemRequest" name="updateItemRequest">
+            Item Name: <input type="text" name="itemName"> <br /><br />
+            New Price: <input type="text" name="newPrice"> <br /><br />
 
             <input type="submit" value="Update" name="updateSubmit"></p>
         </form>
@@ -266,11 +266,11 @@
         function handleUpdateRequest() {
             global $db_conn;
 
-            $old_name = $_POST['oldName'];
-            $new_name = $_POST['newName'];
+            $item_name = $_POST['itemName'];
+            $new_price = $_POST['newPrice'];
 
             // you need the wrap the old name and new name values with single quotations
-            executePlainSQL("UPDATE demoTable SET name='" . $new_name . "' WHERE name='" . $old_name . "'");
+            executePlainSQL("UPDATE Items SET cost='" . $new_price . "' WHERE ItemName='" . $item_name . "'");
             OCICommit($db_conn);
         }
 
@@ -481,7 +481,7 @@
             if (connectToDB()) {
                 if (array_key_exists('resetTablesRequest', $_POST)) {
                     handleResetRequest();
-                } else if (array_key_exists('updateQueryRequest', $_POST)) {
+                } else if (array_key_exists('updateItemRequest', $_POST)) {
                     handleUpdateRequest();
                 } else if (array_key_exists('insertMatchRequest', $_POST)) {
                     handleInsertRequest();
