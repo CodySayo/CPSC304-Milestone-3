@@ -89,11 +89,11 @@
 
         <!-- PROJECTION -->
         <h2></h2>
-        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+        <form method="POST" action="MatchHistory.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="projectRequest" name="projectRequest">
+            <input type="submit" name="projectSubmit"></p>
+            User ID: <input type="text" name="projectInput"> <br /><br />
         </form>
-
 
         <!-- JOIN -->
         <h2></h2>
