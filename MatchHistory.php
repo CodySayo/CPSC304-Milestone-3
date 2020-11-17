@@ -60,13 +60,13 @@
 
         <hr />
 
-        <h2>Update Name in DemoTable</h2>
+        <h2>Update Item Price</h2>
         <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
 
         <form method="POST" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="updateQueryRequest" name="updateQueryRequest">
-            Old Name: <input type="text" name="oldName"> <br /><br />
-            New Name: <input type="text" name="newName"> <br /><br />
+            <input type="hidden" id="updateItemRequest" name="updateItemRequest">
+            Item Name: <input type="text" name="itemName"> <br /><br />
+            New Price: <input type="text" name="newPrice"> <br /><br />
 
             <input type="submit" value="Update" name="updateSubmit"></p>
         </form>
@@ -124,10 +124,10 @@
         <hr /> 
 
         <!-- AGGREGATION WITH HAVING -->
-        <h2></h2>
+        <h2>Find all Users who have played more than 3 matches and give their average kills and deaths</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+            <input type="hidden" id="aggrHavingRequest" name="aggrHavingRequest">
+            <input type="submit" name="aggrHaving"></p>
         </form>
 
         <hr /> 
@@ -142,10 +142,10 @@
         <hr /> 
 
         <!-- DIVISION -->
-        <h2></h2>
+        <h2>Find the users that have lost all their matches</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+            <input type="hidden" id="divisionRequest" name="divisionRequest">
+            <input type="submit" name="divisionSubmit"></p>
         </form>
 
         <hr /> 
@@ -268,11 +268,11 @@
         function handleUpdateRequest() {
             global $db_conn;
 
-            $old_name = $_POST['oldName'];
-            $new_name = $_POST['newName'];
+            $item_name = $_POST['itemName'];
+            $new_price = $_POST['newPrice'];
 
             // you need the wrap the old name and new name values with single quotations
-            executePlainSQL("UPDATE demoTable SET name='" . $new_name . "' WHERE name='" . $old_name . "'");
+            executePlainSQL("UPDATE Items SET cost='" . $new_price . "' WHERE ItemName='" . $item_name . "'");
             OCICommit($db_conn);
         }
 
@@ -425,10 +425,23 @@
                 echo "</tr>";
             }
             echo "</table>";
-
         }
 
-        function handleAggrHavingRequest(){}
+        function handleAggrHavingRequest(){
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT U.UserID, AVG(Kills), AVG(Deaths) FROM \"User\" U GROUP BY U.UserID HAVING count(*) > 3");
+            echo "<table>";
+            echo "<tr> <th>User ID</th> <th>Average Kills</th> <tr>Average Deaths</tr> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
 
         function handleNestedAggrGroupByRequest(){
             global $db_conn;
@@ -446,7 +459,21 @@
             echo "</table>";
         }
 
-        function handleDivisionRequest(){}
+        function handleDivisionRequest(){
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT * FROM \"User\" U WHERE NOT EXISTS ( ( SELECT * FROM \"User\" U2 WHERE U2.UserID = U.UserID ) MINUS ( SELECT * FROM \"User\" U3 WHERE U3.UserID = U.UserID AND U3.Victory = 'False' ) ) ");
+            echo "<table>";
+            echo "<tr> <th>User ID Name</th> <th>Team</th> <th>Match ID</th> <th>Victory</th> <th>Kills</th> <th>Deaths</th> <th>Assists</th> <th>Champion Name</th> <th>Role</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
 
 
 
@@ -456,7 +483,7 @@
             if (connectToDB()) {
                 if (array_key_exists('resetTablesRequest', $_POST)) {
                     handleResetRequest();
-                } else if (array_key_exists('updateQueryRequest', $_POST)) {
+                } else if (array_key_exists('updateItemRequest', $_POST)) {
                     handleUpdateRequest();
                 } else if (array_key_exists('insertMatchRequest', $_POST)) {
                     handleInsertRequest();
@@ -477,11 +504,14 @@
                     handleShowTablesRequest();
                 } else if (array_key_exists('aggrGroupBy', $_GET)) {
                     handleAggrGroupByRequest();
-                } 
-                else if (array_key_exists('joinQueryRequest', $_GET)) {
+                } else if (array_key_exists('joinQueryRequest', $_GET)) {
                     handleJoinRequest();
                 } else if (array_key_exists("nestedAgg", $_GET)) {
                     handleNestedAggrGroupByRequest();
+                } else if (array_key_exists("aggrHaving", $_GET)) {
+                    handleAggrHavingRequest();
+                } else if (array_key_exists("divisionRequest", $_GET)) {
+                    handleDivisionRequest();
                 }
                 else if (array_key_exists('projectRequest', $_GET)) {
                     handleProjectionRequest();
@@ -496,7 +526,7 @@
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) 
-        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest']) || isset($_GET['projectSubmit']) || isset($_GET['selectionSubmit'])) {
+        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest'])|| isset($_GET['projectSubmit']) || isset($_GET['selectionSubmit']) || isset($_GET['aggrHaving']) || isset($_GET['divisionSubmit'])) {
             handleGETRequest();
         }
 		?>
