@@ -44,6 +44,34 @@
             <input type="hidden" id="insertMatchRequest" name="insertMatchRequest">
             Match ID: <input type="text" name="insertMatchID"> <br /><br />
             Date: <input type="text" name="insertMatchDate"> <br /><br />
+            User ID: <input type="text" name="insertUserID"> <br /><br />
+            Team:   <select name="insertTeam">
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                    </select> <br /><br />
+            Victory or Defeat:  <select name="insertVictory">
+                                    <option value="True">Victory</option>
+                                    <option value="False">Defeat</option>
+                                </select> <br /><br />
+            Kills: <input type="text" name="insertKills"> Deaths: <input type="text" name="insertDeaths"> Assists: <input type="text" name="insertAssists"> <br /><br />
+            Champion Name:  <select name="insertChampion">
+                                <option value="Fizz">Fizz</option>
+                                <option value="Jax">Jax</option>
+                                <option value="Zed">Zed</option>
+                                <option value="Vi">Vi</option>
+                                <option value="Tristana">Tristana</option>
+                            </select> <br /><br />
+            Role: <select name="insertRole">
+                    <option value="Assassin">Assassin</option>
+                    <option value="Bruiser">Bruiser</option>
+                    <option value="Tank">Tank</option>
+                    <option value="Marksman">Marksman</option>
+                    <option value="Enchanter">Enchanter</option>
+                  </select> <br /><br />
+            Item: <input type="checkbox" name="insertItems[]" value="Bilgewater Cutlass">Bilgewater Cutlass <input type="checkbox" name="insertItems[]" value="Refillable Potion">Refillable Potion<br />
+                  <input type="checkbox" name="insertItems[]" value="Galeforce">Galeforce <input type="checkbox" name="insertItems[]" value="Force of Nature">Force of Nature<br />
+                  <input type="checkbox" name="insertItems[]" value="Kraken Slayer">Kraken Slayer<br />
+
 
             <input type="submit" value="Insert" name="insertSubmit"></p>
         </form>
@@ -296,17 +324,24 @@
         function handleInsertRequest() {
             global $db_conn;
 
-            //Getting the values from user and insert data into the table
-            $tuple = array (
-                ":bind1" => $_POST['insertMatchID'],
-                ":bind2" => $_POST['insertMatchDate']
-            );
+            $matchID = $_POST['insertMatchID'];
+            $matchDate = $_POST['insertMatchDate'];
 
-            $alltuples = array (
-                $tuple
-            );
+            $userID = $_POST['insertUserID'];
+            $team = $_POST['insertTeam'];
+            $victory = $_POST['insertVictory'];
+            $kills = $_POST['insertKills'];
+            $deaths = $_POST['insertDeaths'];
+            $assists = $_POST['insertAssists'];
+            $champion = $_POST['insertChampion'];
+            $role = $_POST['insertRole'];
+            $items = $_POST['insertItems'];
 
-            executeBoundSQL("insert into match values(:bind1, :bind2)", $alltuples);
+            executePlainSQL("INSERT INTO Match VALUES($matchID, '$matchDate')");
+            executePlainSQL("INSERT INTO \"User\" VALUES($userID, '$team', '$matchID', '$victory', $kills, $deaths, $assists, '$champion', '$role')");
+            foreach ($items as $item){ 
+                executePlainSQL("INSERT INTO BuysItem VALUES('$item', $userID, '$team', '$matchID')");
+            }
             OCICommit($db_conn);
         }
 
