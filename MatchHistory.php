@@ -98,8 +98,6 @@
         <!-- JOIN -->
         <h2>Get Items and Runes from User with more than some number of kills</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
             <input type="hidden" id="joinQueryRequest" name="joinQueryRequest">
             User ID: <input type="text" name="joinID"> <br /><br />
             Kill Count: <input type="text" name="joinNum"> <br /><br />
@@ -426,10 +424,7 @@
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) 
-        || isset($_GET['aggrGroupByRequest']) ) {
-=======
-        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) || isset($_GET['joinSubmit'])) {
->>>>>>> 8d5f528367c810cfa8803b77a9b81df05c117bb9
+        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit'])) {
             handleGETRequest();
         }
 		?>
