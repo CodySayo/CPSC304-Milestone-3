@@ -96,10 +96,13 @@
         </form>
 
         <!-- JOIN -->
-        <h2></h2>
+        <h2>Get Items and Runes from User with more than some number of kills</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+            <input type="hidden" id="joinQueryRequest" name="joinQueryRequest">
+            User ID: <input type="text" name="joinID"> <br /><br />
+            Kill Count: <input type="text" name="joinNum"> <br /><br />
+
+            <input type="submit" value="Join" name="joinSubmit"></p>
         </form>
 
 
@@ -227,7 +230,8 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example, 
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_odys722", "a52955390", "dbhost.students.cs.ubc.ca:1522/stu");
+
+            $db_conn = OCILogon("ora_vzhu23", "a25864851", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");
@@ -260,8 +264,6 @@
 
         function handleResetRequest() {
             global $db_conn;
-            // Drop old table
-            // executePlainSQL("DROP TABLE Match");
 
             // Execute database setup statements
             $statements = explode(';', file_get_contents('databaseSetup.sql'));
@@ -270,7 +272,7 @@
                     executePlainSQL($statement);
                 }
             }
-            // executePlainSQL(file_get_contents('databaseSetup.sql'));
+
             echo "<br> creating new table <br>";
             OCICommit($db_conn);
 
@@ -339,7 +341,26 @@
 
         function handleProjectionRequest(){}
 
-        function handleJoinRequest(){}
+        function handleJoinRequest(){
+            global $db_conn;
+
+            //Getting the values from user and insert data into the table
+            $userID = $_GET['joinID'];
+            $num = $_GET['joinNum'];
+
+
+            $result = executePlainSQL("SELECT u.ChampionName, i.ItemName, r.Keystone FROM \"User\" u, BuysItem i, RunePage r WHERE u.UserID = $userID AND u.Kills > $num AND u.UserID = i.UserID AND u.Team = i.Team AND u.MatchID = i.MatchID AND u.UserID = r.UserID AND u.Team = r.Team AND u.MatchID = r.MatchID");
+            echo "<table>";
+            echo "<tr> <th>Champion Name</th> <th>Items</th> <th>Keystone</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
 
         function handleAggrGroupByRequest(){}
 
@@ -377,6 +398,9 @@
                 }
                 else if (array_key_exists('showTables', $_GET)) {
                     handleShowTablesRequest();
+                } 
+                else if (array_key_exists('joinQueryRequest', $_GET)) {
+                    handleJoinRequest();
                 }
                 disconnectFromDB();
             }
@@ -384,7 +408,7 @@
 
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
-        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) ) {
+        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) || isset($_GET['joinSubmit'])) {
             handleGETRequest();
         }
 		?>

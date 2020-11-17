@@ -127,7 +127,6 @@ CREATE TABLE BuysItem(
     PRIMARY KEY (ItemName, UserID, Team),
     FOREIGN KEY (ItemName) REFERENCES Items(ItemName),
     FOREIGN KEY (UserID, Team, MatchID) REFERENCES "User"(UserID, Team, MatchID)
-    ON DELETE CASCADE
 );
 
 CREATE TABLE RunePage(
@@ -146,7 +145,7 @@ CREATE TABLE RunePage(
 CREATE TABLE RunesInPage(
     PageID Integer PRIMARY KEY, 
     RuneName Char(30),
-    FOREIGN KEY (PageID) REFERENCES RunePage(PageID) ON DELETE CASCADE,
+    FOREIGN KEY (PageID) REFERENCES RunePage(PageID),
     FOREIGN KEY (RuneName) REFERENCES Runes(RuneName)
 );
 
