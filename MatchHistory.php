@@ -104,10 +104,10 @@
 
 
         <!-- AGGREGATION WITH GROUP BY -->
-        <h2></h2>
+        <h2>Find the average gold spent in a match for each role</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+            <input type="hidden" id="aggrGroupByRequest" name="aggrGroupByRequest">
+            <input type="submit" name="aggrGroupBy"></p>
         </form>
 
 
@@ -227,7 +227,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example, 
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_odys722", "a52955390", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_obys", "a68031525", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");
@@ -341,7 +341,22 @@
 
         function handleJoinRequest(){}
 
-        function handleAggrGroupByRequest(){}
+        function handleAggrGroupByRequest(){
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT U.Role, AVG(Cost) FROM \"User\" U, BuysItem B, Items I WHERE U.UserID = B.UserID AND U.MatchID = B.MatchID AND U.Team = B.Team AND B.ItemName = I.ItemName GROUP BY U.Role");
+            echo "<table>";
+            echo "<tr> <th>Role</th> <th>Gold Spent</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+
+        }
 
         function handleAggrHavingRequest(){}
 
@@ -374,9 +389,10 @@
             if (connectToDB()) {
                 if (array_key_exists('countTuples', $_GET)) {
                     handleCountRequest();
-                }
-                else if (array_key_exists('showTables', $_GET)) {
+                } else if (array_key_exists('showTables', $_GET)) {
                     handleShowTablesRequest();
+                } else if (array_key_exists('aggrGroupBy', $_GET)) {
+                    handleAggrGroupByRequest();
                 }
                 disconnectFromDB();
             }
@@ -384,7 +400,8 @@
 
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
-        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) ) {
+        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) 
+        || isset($_GET['aggrGroupByRequest']) ) {
             handleGETRequest();
         }
 		?>
