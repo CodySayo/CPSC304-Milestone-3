@@ -96,10 +96,15 @@
 
 
         <!-- JOIN -->
-        <h2></h2>
+        <h2>Get Items and Runes from User with more than some number of kills</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
             <input type="hidden" id="showTablesRequest" name="showTablesRequest">
             <input type="submit" name="showTables"></p>
+            <input type="hidden" id="joinQueryRequest" name="joinQueryRequest">
+            User ID: <input type="text" name="joinID"> <br /><br />
+            Kill Count: <input type="text" name="joinNum"> <br /><br />
+
+            <input type="submit" value="Join" name="joinSubmit"></p>
         </form>
 
 
@@ -260,8 +265,6 @@
 
         function handleResetRequest() {
             global $db_conn;
-            // Drop old table
-            // executePlainSQL("DROP TABLE Match");
 
             // Execute database setup statements
             $statements = explode(';', file_get_contents('databaseSetup.sql'));
@@ -270,7 +273,7 @@
                     executePlainSQL($statement);
                 }
             }
-            // executePlainSQL(file_get_contents('databaseSetup.sql'));
+
             echo "<br> creating new table <br>";
             OCICommit($db_conn);
 
@@ -339,7 +342,26 @@
 
         function handleProjectionRequest(){}
 
-        function handleJoinRequest(){}
+        function handleJoinRequest(){
+            global $db_conn;
+
+            //Getting the values from user and insert data into the table
+            $userID = $_GET['joinID'];
+            $num = $_GET['joinNum'];
+
+
+            $result = executePlainSQL("SELECT u.ChampionName, i.ItemName, r.Keystone FROM \"User\" u, BuysItem i, RunePage r WHERE u.UserID = $userID AND u.Kills > $num AND u.UserID = i.UserID AND u.Team = i.Team AND u.MatchID = i.MatchID AND u.UserID = r.UserID AND u.Team = r.Team AND u.MatchID = r.MatchID");
+            echo "<table>";
+            echo "<tr> <th>Champion Name</th> <th>Items</th> <th>Keystone</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
 
         function handleAggrGroupByRequest(){
             global $db_conn;
@@ -393,6 +415,9 @@
                     handleShowTablesRequest();
                 } else if (array_key_exists('aggrGroupBy', $_GET)) {
                     handleAggrGroupByRequest();
+                } 
+                else if (array_key_exists('joinQueryRequest', $_GET)) {
+                    handleJoinRequest();
                 }
                 disconnectFromDB();
             }
@@ -402,6 +427,9 @@
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) 
         || isset($_GET['aggrGroupByRequest']) ) {
+=======
+        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) || isset($_GET['joinSubmit'])) {
+>>>>>>> 8d5f528367c810cfa8803b77a9b81df05c117bb9
             handleGETRequest();
         }
 		?>
