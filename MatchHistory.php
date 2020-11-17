@@ -75,7 +75,7 @@
             <input type="submit" name="showTables"></p>
         </form>
 
-
+        <hr /> 
         <!-- NEW STUFF: CHANGE FIELDS AS NEEDED -->
 
 
@@ -86,6 +86,7 @@
             <input type="submit" name="showTables"></p>
         </form>
 
+        <hr /> 
 
         <!-- PROJECTION -->
         <h2></h2>
@@ -94,6 +95,7 @@
             <input type="submit" name="showTables"></p>
         </form>
 
+        <hr /> 
 
         <!-- JOIN -->
         <h2>Get Items and Runes from User with more than some number of kills</h2>
@@ -105,6 +107,7 @@
             <input type="submit" value="Join" name="joinSubmit"></p>
         </form>
 
+        <hr /> 
 
         <!-- AGGREGATION WITH GROUP BY -->
         <h2></h2>
@@ -113,6 +116,7 @@
             <input type="submit" name="showTables"></p>
         </form>
 
+        <hr /> 
 
         <!-- AGGREGATION WITH HAVING -->
         <h2></h2>
@@ -121,14 +125,16 @@
             <input type="submit" name="showTables"></p>
         </form>
 
+        <hr /> 
 
         <!-- NESTED AGGREGATION GROUP BY -->
-        <h2></h2>
+        <h2>Display the number of items purchased by the user who has the greatest number of items purchased</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
+            <input type="hidden" id="nestedAggRequest" name="nestedAggRequest">
+            <input type="submit" name="nestedAgg"></p>
         </form>
 
+        <hr /> 
 
         <!-- DIVISION -->
         <h2></h2>
@@ -137,6 +143,9 @@
             <input type="submit" name="showTables"></p>
         </form>
 
+        <hr /> 
+
+        <h2> Query Result </h2>
 
         <?php
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
@@ -230,7 +239,6 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example, 
 			// ora_platypus is the username and a12345678 is the password.
-
             $db_conn = OCILogon("ora_vzhu23", "a25864851", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
@@ -366,7 +374,21 @@
 
         function handleAggrHavingRequest(){}
 
-        function handleNestedAggrGroupByRequest(){}
+        function handleNestedAggrGroupByRequest(){
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT u1.UserID, COUNT(*) FROM \"User\" u1, BuysItem i WHERE u1.UserID = i.UserID AND u1.Team = i.Team AND u1.MatchID = i.MatchID GROUP BY u1.UserID HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM \"User\" u2, BuysItem i2 WHERE u2.UserID = i2.UserID AND u2.Team = i2.Team AND u2.MatchID = i2.MatchID GROUP BY u2.UserID )");
+            echo "<table>";
+            echo "<tr> <th>User ID Name</th> <th>Number of Items</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
 
         function handleDivisionRequest(){}
 
@@ -401,6 +423,8 @@
                 } 
                 else if (array_key_exists('joinQueryRequest', $_GET)) {
                     handleJoinRequest();
+                } else if (array_key_exists("nestedAgg", $_GET)) {
+                    handleNestedAggrGroupByRequest();
                 }
                 disconnectFromDB();
             }
@@ -408,7 +432,7 @@
 
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
-        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) || isset($_GET['joinSubmit'])) {
+        } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest'])) {
             handleGETRequest();
         }
 		?>
