@@ -449,7 +449,7 @@
         function handleAggrGroupByRequest(){
             global $db_conn;
 
-            $result = executePlainSQL("SELECT U.Role, AVG(Cost) FROM \"User\" U, BuysItem B, Items I WHERE U.UserID = B.UserID AND U.MatchID = B.MatchID AND U.Team = B.Team AND B.ItemName = I.ItemName GROUP BY U.Role");
+            $result = executePlainSQL("SELECT U.Role, TRUNC(AVG(Cost)) FROM \"User\" U, BuysItem B, Items I WHERE U.UserID = B.UserID AND U.MatchID = B.MatchID AND U.Team = B.Team AND B.ItemName = I.ItemName GROUP BY U.Role");
             echo "<table>";
             echo "<tr> <th>Role</th> <th>Gold Spent</th> </tr>";
             while (($row = oci_fetch_row($result)) != false) {
