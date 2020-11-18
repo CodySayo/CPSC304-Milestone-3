@@ -134,6 +134,12 @@
                 <input type="hidden" id="showUsersRequest" name="showUsersRequest">
                 <input type="submit" name="showUsers"></p>
             </form>
+
+            <h2>Display the tuples in Items</h2>
+            <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+                <input type="hidden" id="showItemsRequest" name="showItemsRequest">
+                <input type="submit" name="showItems"></p>
+            </form>
         </div>
 
         <hr /> 
@@ -557,6 +563,23 @@
             echo "</table>";
         }
 
+        function handleShowItemsRequest(){
+             global $db_conn;
+
+            $result = executePlainSQL("SELECT * FROM Items");
+            echo "<table>";
+            echo "<tr> <th>Item Name</th> <th>Attack Damage</th> <th>Armor</th> <th>Ability Power</th> <th>Magic Resist</th> <th>Life Steal</th> <th>Attack Speed</th> <th>Crit Chance</th> <th>Health</th> <th>Movement Speed</th> <th>Cost</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
+
+
 
 
         // HANDLE ALL POST ROUTES
@@ -602,6 +625,8 @@
                     handleSelectionRequest();
                 } else if (array_key_exists('showUsers', $_GET)) {
                     handleShowUsersRequest();
+                } else if (array_key_exists('showItems', $_GET)) {
+                    handleShowItemsRequest();
                 }
                 disconnectFromDB();
             }
@@ -610,7 +635,7 @@
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) 
-        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest'])|| isset($_GET['projectSubmit']) || isset($_GET['selectionSubmit']) || isset($_GET['aggrHaving']) || isset($_GET['divisionSubmit']) || isset($_GET['showUsers'])) {
+        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest'])|| isset($_GET['projectSubmit']) || isset($_GET['selectionSubmit']) || isset($_GET['aggrHaving']) || isset($_GET['divisionSubmit']) || isset($_GET['showUsers']) || isset($_GET['showItems'])) {
             handleGETRequest();
         }
 		?>
