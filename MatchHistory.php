@@ -143,7 +143,7 @@
         <hr /> 
 
         <!-- AGGREGATION WITH GROUP BY -->
-        <h2>Find the average gold spent in a match for each role</h2>
+        <h2>Find the average gold spent in a match for each role given that the User has bought an item</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
             <input type="hidden" id="aggrGroupByRequest" name="aggrGroupByRequest">
             <input type="submit" name="aggrGroupBy"></p>
