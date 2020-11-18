@@ -120,11 +120,21 @@
             <input type="submit" value="Update" name="updateSubmit"></p>
         </form>
 
-        <h2>Display the Tuples in Matches</h2>
-        <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="showTablesRequest" name="showTablesRequest">
-            <input type="submit" name="showTables"></p>
-        </form>
+        <hr />
+
+        <div style="clear: both">
+            <h2>Display the tuples in Matches</h2>
+            <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+                <input type="hidden" id="showTablesRequest" name="showTablesRequest">
+                <input type="submit" name="showTables"></p>
+            </form>
+
+            <h2>Display the tuples in Users</h2>
+            <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
+                <input type="hidden" id="showUsersRequest" name="showUsersRequest">
+                <input type="submit" name="showUsers"></p>
+            </form>
+        </div>
 
         <hr /> 
         <!-- NEW STUFF: CHANGE FIELDS AS NEEDED -->
@@ -531,6 +541,22 @@
             echo "</table>";
         }
 
+        function handleShowUsersRequest(){
+             global $db_conn;
+
+            $result = executePlainSQL("SELECT * FROM \"User\"");
+            echo "<table>";
+            echo "<tr> <th>User ID</th> <th>Team</th> <th>Match ID</th> <th>Victory</th> <th>Kills</th> <th>Deaths</th> <th>Assists</th> <th>Champion Name</th> <th>Role</th> </tr>";
+            while (($row = oci_fetch_row($result)) != false) {
+                echo "<tr>";
+                foreach ($row as $item) {
+                    echo "<td> " . $item . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
+
 
 
         // HANDLE ALL POST ROUTES
@@ -574,6 +600,8 @@
                 }
                 else if (array_key_exists('selectionRequest', $_GET)) {
                     handleSelectionRequest();
+                } else if (array_key_exists('showUsers', $_GET)) {
+                    handleShowUsersRequest();
                 }
                 disconnectFromDB();
             }
@@ -582,7 +610,7 @@
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest']) || isset($_GET['showTablesRequest']) 
-        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest'])|| isset($_GET['projectSubmit']) || isset($_GET['selectionSubmit']) || isset($_GET['aggrHaving']) || isset($_GET['divisionSubmit'])) {
+        || isset($_GET['aggrGroupByRequest']) || isset($_GET['joinSubmit']) || isset($_GET['nestedAggRequest'])|| isset($_GET['projectSubmit']) || isset($_GET['selectionSubmit']) || isset($_GET['aggrHaving']) || isset($_GET['divisionSubmit']) || isset($_GET['showUsers'])) {
             handleGETRequest();
         }
 		?>
