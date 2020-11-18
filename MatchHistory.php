@@ -131,7 +131,7 @@
         <hr /> 
 
         <!-- JOIN -->
-        <h2>Display the champion and items bought from the user with more than some number of kills</h2>3
+        <h2>Display the champion and items bought from the user with more than some number of kills</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
             <input type="hidden" id="joinQueryRequest" name="joinQueryRequest">
             User ID: <input type="text" name="joinID"> <br /><br />
@@ -499,7 +499,7 @@
 
             $result = executePlainSQL("SELECT * FROM \"User\" U WHERE NOT EXISTS ( ( SELECT * FROM \"User\" U2 WHERE U2.UserID = U.UserID ) MINUS ( SELECT * FROM \"User\" U3 WHERE U3.UserID = U.UserID AND U3.Victory = 'False' ) ) ");
             echo "<table>";
-            echo "<tr> <th>User ID Name</th> <th>Team</th> <th>Match ID</th> <th>Victory</th> <th>Kills</th> <th>Deaths</th> <th>Assists</th> <th>Champion Name</th> <th>Role</th> </tr>";
+            echo "<tr> <th>User ID</th> <th>Team</th> <th>Match ID</th> <th>Victory</th> <th>Kills</th> <th>Deaths</th> <th>Assists</th> <th>Champion Name</th> <th>Role</th> </tr>";
             while (($row = oci_fetch_row($result)) != false) {
                 echo "<tr>";
                 foreach ($row as $item) {
