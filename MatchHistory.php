@@ -433,9 +433,9 @@
             $num = $_GET['joinNum'];
 
 
-            $result = executePlainSQL("SELECT u.ChampionName, i.ItemName, r.Keystone FROM \"User\" u, BuysItem i, RunePage r WHERE u.UserID = $userID AND u.Kills > $num AND u.UserID = i.UserID AND u.Team = i.Team AND u.MatchID = i.MatchID AND u.UserID = r.UserID AND u.Team = r.Team AND u.MatchID = r.MatchID");
+            $result = executePlainSQL("SELECT u.ChampionName, i.ItemName FROM \"User\" u, BuysItem i WHERE u.UserID = $userID AND u.Kills > $num AND u.UserID = i.UserID AND u.Team = i.Team AND u.MatchID = i.MatchID ");
             echo "<table>";
-            echo "<tr> <th>Champion Name</th> <th>Items</th> <th>Keystone</th> </tr>";
+            echo "<tr> <th>Champion Name</th> <th>Items</th> </tr>";
             while (($row = oci_fetch_row($result)) != false) {
                 echo "<tr>";
                 foreach ($row as $item) {
