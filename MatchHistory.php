@@ -27,8 +27,29 @@
         text-align: center; 
         vertical-align: middle;
     }
+    img {
+        width: 300px;
+        height: auto;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        padding-bottom: 0px;
+        margin-bottom: 0px;
+    }
+    #title {
+        text-align: center;
+        color: #dec26d;
+        margin-top: 0px;
+    }
+    #topContainer {
+        background-color: #8080b8;
+    }
     </style>
     <body>
+    <div id="topContainer">
+        <img src="leagueLogo.png" alt="League of Legends Logo">
+        <h1 id="title">Match History</h1>
+    </div>
         <h2>Reset Database</h2>
 
         <form method="POST" action="MatchHistory.php">
@@ -273,7 +294,7 @@
             // Your username is ora_(CWL_ID) and the password is a(student number). For example, 
 			// ora_platypus is the username and a12345678 is the password.
 
-            $db_conn = OCILogon("ora_obys", "a68031525", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_odys722", "a52955390", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");
