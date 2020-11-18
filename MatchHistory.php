@@ -412,7 +412,7 @@
             $userID = $_GET['projectUserIDInput'];
             $matchID = $_GET['projectMatchIDInput'];
 
-            $result = executePlainSQL("SELECT u.Kills, u.Deaths, u.Assists FROM \"User\" u, Match m WHERE u.UserID = $userID AND m.MatchID = $matchID");
+            $result = executePlainSQL("SELECT u.Kills, u.Deaths, u.Assists FROM \"User\" u, Match m WHERE u.UserID = $userID AND m.MatchID = $matchID AND m.MatchID = u.MatchID");
             echo "<table>";
             echo "<tr> <th>Kills</th> <th>Deaths</th> <th>Assists</th> </tr>";
             while (($row = oci_fetch_row($result)) != false) {
