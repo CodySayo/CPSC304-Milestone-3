@@ -131,7 +131,7 @@
         <hr /> 
 
         <!-- JOIN -->
-        <h2>Display the champion and items bought from the user with more than some number of kills</h2>
+        <h2>Display the champion and items bought from the user with more than some number of kills</h2>3
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
             <input type="hidden" id="joinQueryRequest" name="joinQueryRequest">
             User ID: <input type="text" name="joinID"> <br /><br />
@@ -465,7 +465,7 @@
         function handleAggrHavingRequest(){
             global $db_conn;
 
-            $result = executePlainSQL("SELECT U.UserID, AVG(Kills), AVG(Deaths) FROM \"User\" U GROUP BY U.UserID HAVING count(*) > 3");
+            $result = executePlainSQL("SELECT U.UserID, TRUNC(AVG(Kills)), TRUNC(AVG(Deaths)) FROM \"User\" U GROUP BY U.UserID HAVING count(*) > 3");
             echo "<table>";
             echo "<tr> <th>User ID</th> <th>Average Kills</th> <th>Average Deaths</th> </tr>";
             while (($row = oci_fetch_row($result)) != false) {
