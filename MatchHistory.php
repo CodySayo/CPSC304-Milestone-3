@@ -162,7 +162,7 @@
         <hr /> 
 
         <!-- JOIN -->
-        <h2>Display the champion and items bought from the user with more than some number of kills</h2>3
+        <h2>Display the champion and items bought from the user with more than some number of kills</h2>
         <form method="GET" action="MatchHistory.php"> <!--refresh page when submitted-->
             <input type="hidden" id="joinQueryRequest" name="joinQueryRequest">
             User ID: <input type="text" name="joinID"> <br /><br />
