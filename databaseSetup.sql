@@ -270,11 +270,19 @@ INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, Champ
 INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, ChampionName, Role) VALUES 
 (23456, 'Blue', 2345678, 'True', 3, 12, 1, 'Jax', 'Bruiser');
 INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, ChampionName, Role) VALUES 
-(34567, 'Red', 2345678, 'True', 2, 1, 2, 'Vi', 'Bruiser');
+(34567, 'Red', 2345678, 'False', 2, 1, 2, 'Vi', 'Bruiser');
 INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, ChampionName, Role) VALUES 
 (45678, 'Blue', 3456789, 'True', 4, 1, 1, 'Tristana', 'Marksman');
 INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, ChampionName, Role) VALUES 
+(45678, 'Blue', 4564124, 'True', 7, 1, 1, 'Tristana', 'Marksman');
+INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, ChampionName, Role) VALUES 
+(45678, 'Blue', 2345678, 'True', 8, 3, 1, 'Vi', 'Bruiser');
+INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, ChampionName, Role) VALUES 
 (13754, 'Red', 2377788, 'False', 0, 20, 0, 'Zed', 'Assassin');
+INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, ChampionName, Role) VALUES 
+(12000, 'Blue', 2345670, 'False', 2, 3, 0, 'Tristana', 'Marksman');
+INSERT INTO "User"(UserID, Team, MatchID, Victory, Kills, Deaths, Assists, ChampionName, Role) VALUES 
+(12000, 'Red', 4564124, 'False', 1, 3, 1, 'Jax', 'Bruiser');
 
 INSERT INTO HasSpells VALUES  
 ('Flash', 12454, 'Blue', 4564124);
@@ -286,6 +294,14 @@ INSERT INTO HasSpells VALUES
 ('Ignite', 34567, 'Red', 2345678);
 INSERT INTO HasSpells VALUES  
 ('Heal', 45678, 'Blue', 3456789);
+INSERT INTO HasSpells VALUES  
+('Heal', 45678, 'Blue', 4564124);
+INSERT INTO HasSpells VALUES  
+('Heal', 45678, 'Blue', 2345678);
+INSERT INTO HasSpells VALUES  
+('Heal', 12000, 'Red', 4564124);
+INSERT INTO HasSpells VALUES  
+('Heal', 12000, 'Blue', 2345670);
 
 INSERT INTO BuysItem(ItemName, UserID, Team, MatchID) VALUES 
 ('Bilgewater Cutlass', 12454, 'Blue', 4564124);
@@ -297,6 +313,16 @@ INSERT INTO BuysItem(ItemName, UserID, Team, MatchID) VALUES
 ('Force of Nature', 45678, 'Blue', 3456789);
 INSERT INTO BuysItem(ItemName, UserID, Team, MatchID) VALUES 
 ('Kraken Slayer', 13754, 'Red', 2377788);
+INSERT INTO BuysItem(ItemName, UserID, Team, MatchID) VALUES 
+('Galeforce', 45678, 'Blue', 2345678);
+INSERT INTO BuysItem(ItemName, UserID, Team, MatchID) VALUES 
+('Bilgewater Cutlass', 45678, 'Blue', 2345678);
+INSERT INTO BuysItem(ItemName, UserID, Team, MatchID) VALUES 
+('Bilgewater Cutlass', 45678, 'Blue', 4564124);
+INSERT INTO BuysItem(ItemName, UserID, Team, MatchID) VALUES 
+('Bilgewater Cutlass', 12000, 'Red', 4564124);
+INSERT INTO BuysItem(ItemName, UserID, Team, MatchID) VALUES 
+('Kraken Slayer', 12000, 'Blue', 2345670);
 
 INSERT INTO RunePage(SecondaryPath, PageName, Keystone, PageID, UserID, Team, MatchID) VALUES 
 ('Domination', 'Mid', 'Electrocute', 141415, 12454, 'Blue', 4564124);
@@ -308,6 +334,14 @@ INSERT INTO RunePage(SecondaryPath, PageName, Keystone, PageID, UserID, Team, Ma
 ('Precision', 'Jungle', 'Lethal Tempo', 456271, 45678, 'Blue', 3456789);
 INSERT INTO RunePage(SecondaryPath, PageName, Keystone, PageID, UserID, Team, MatchID) VALUES 
 ('Resolve', 'Top', 'Aftershock', 453695, 13754, 'Red', 2377788);
+INSERT INTO RunePage(SecondaryPath, PageName, Keystone, PageID, UserID, Team, MatchID) VALUES 
+('Precision', 'AD', 'Lethal Tempo', 453555, 45678, 'Blue', 4564124);
+INSERT INTO RunePage(SecondaryPath, PageName, Keystone, PageID, UserID, Team, MatchID) VALUES 
+('Precision', 'AD', 'Lethal Tempo', 487595, 45678, 'Blue', 2345678);
+INSERT INTO RunePage(SecondaryPath, PageName, Keystone, PageID, UserID, Team, MatchID) VALUES 
+('Resolve', 'Jungle', 'Aftershock', 968754, 12000, 'Blue', 2345670);
+INSERT INTO RunePage(SecondaryPath, PageName, Keystone, PageID, UserID, Team, MatchID) VALUES 
+('Resolve', 'Top', 'Aftershock', 677754, 12000, 'Red', 4564124);
 
 INSERT INTO RunesInPage(RuneName, PageID) VALUES 
 ('Coup de Grace', 141415);
